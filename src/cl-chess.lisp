@@ -93,24 +93,17 @@
 ;;; шахматной доске
 (defun make-chess-figure (color type pos)
   (if (on-board pos)
-      (+
-       (* (1+ color) 1000)
-       (* (1+ type) 100)
-       (* (1+ (pos-row pos)) 10)
-       (pos-col pos))
+      (vector color type pos)
       nil))
 
-(defun figure-pos (figure)
-  (let ((pos-number (rem figure 100)))
-    (make-pos
-     (1- (truncate pos-number 10))
-     (rem pos-number 10))))
+(defun figure-color (figure)
+  (aref figure 0))
 
 (defun figure-type (figure)
-  (1- (truncate (rem figure 1000) 100)))
+  (aref figure 1))
 
-(defun figure-color (figure)
-  (1- (truncate figure 1000)))
+(defun figure-pos (figure)
+  (aref figure 2))
 
 
 ;;; Вспомогательные функции
