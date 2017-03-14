@@ -9,9 +9,9 @@
 (in-package :cl-chess.utils)
 
 
-(defun is-member (item list)
+(defun is-member (item list &key (test 'equal))
   "Присутствует ли item в указанном списке"
-  (not (null (member item list))))
+  (not (null (member item list :test test))))
 
 (defun build-mapping (values1 values2)
   "Строит взаимнооднозначное отображение"
