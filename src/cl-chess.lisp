@@ -160,3 +160,16 @@
 
 (defun king-turns (pos)
   (queen-turns pos 1))
+
+
+(defun figure-on-pos (pos figures)
+  "Возвращает фигуру, стоящую на позиции pos
+   или nil, если там нет ни одной фигуры"
+  (find-if (lambda (x) (equal (figure-pos x) pos))
+           figures))
+
+(defun figure-on-pos-p (pos figures)
+  "Стоил ли какая-либо фигура в позиции pos?"
+  (if (figure-on-pos pos figures)
+      t
+      nil))
