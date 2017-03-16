@@ -117,15 +117,44 @@
      (make-pos (+ (pos-row pos) (aref direction 0))
                (+ (pos-col pos) (aref direction 1)))))
 
+(defun figure-on-pos (pos figures)
+  "Возвращает фигуру, стоящую на позиции pos
+   или nil, если там нет ни одной фигуры"
+  (find-if (lambda (x) (pos-equal (figure-pos x) pos))
+           figures))
+
+(defun figure-on-pos-p (pos figures)
+  "Стоил ли какая-либо фигура в позиции pos?"
+  (if (figure-on-pos pos figures)
+      t
+      nil))
 
 
 ;;; Функции, определяющие ходы типов фигур
-(defun pawn-turns (pos)
-  (remove-if-not #'on-board
-                 (reduce (lambda (acc x)
-                           (nconc acc (stepping (direction-stepper x) pos 1)))
-                         (list +NE+ +N+ +NW+)
-                         :initial-value '())))
+(defun pawn-turns (pos color)
+  (let ((row-inx (pos-row pos))
+        (col-inx (pos-col pos))
+        (result '()))
+    (if (= color +black+)
+        (progn
+          (setf result
+                (list
+                 (make-pos (1+ row-inx) col-inx)
+                 (make-pos (1+ row-inx) (1- col-inx))
+                 (make-pos (1+ row-inx) (1+ col-inx))))
+          (when (= 1 row-inx)
+            (setf result
+                  (cons (make-pos (+ row-inx 2) col-inx) result))))
+        (progn
+          (setf result
+                (list
+                 (make-pos (1- row-inx) col-inx)
+                 (make-pos (1- row-inx) (1- col-inx))
+                 (make-pos (1- row-inx) (1+ col-inx))))
+          (when (= 6 row-inx)
+            (setf result
+                  (cons (make-pos (- row-inx 2) col-inx)) result))))
+    (remove-if-not #'on-board result)))
 
 (defun bishop-turns (pos &optional (depth +board-size+))
   (remove-if-not
@@ -167,14 +196,20 @@
   (queen-turns pos 1))
 
 
-(defun figure-on-pos (pos figures)
-  "Возвращает фигуру, стоящую на позиции pos
-   или nil, если там нет ни одной фигуры"
-  (find-if (lambda (x) (pos-equal (figure-pos x) pos))
-           figures))
-
-(defun figure-on-pos-p (pos figures)
-  "Стоил ли какая-либо фигура в позиции pos?"
-  (if (figure-on-pos pos figures)
-      t
-      nil))
+;; TODO Некорректная работа при стартовой позиции 
+(defun pawn-available-turns (pos figures)
+  "Вернет доступные пешки ходы из позиции pos,
+   учитывая остальные фигуры на доске figures"
+  (let ((pawn (figure-on-pos pos figures))
+        (row-inx (pos-row pos))
+        (col-inx (pos-col pos)))
+    (when (and (not (null pawn))
+               (= (figure-type pawn) +pawn+))
+      (let* ((turns (pawn-turns pos (figure-color pawn)))
+             (attacked (remove-if
+                        (lambda (x) (= col-inx (pos-col x))) turns))
+             (not-attacked (remove-if-not
+                            (lambda (x) (= col-inx (pos-col x))) turns)))
+        (nconc
+         (remove-if-not (lambda (x) (figure-on-pos x figures)) attacked)
+         (remove-if (lambda (x) (figure-on-pos x figures)) not-attacked))))))
