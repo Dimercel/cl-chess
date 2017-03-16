@@ -76,6 +76,11 @@
 (defun pos-col (pos)
   (aref pos 1))
 
+(defun pos-equal (pos1 pos2)
+  (and
+   (= (pos-row pos1) (pos-row pos2))
+   (= (pos-col pos1) (pos-col pos2))))
+
 (defun intl-pos (pos)
   "Позиция в международных обозначениях"
   (concatenate 'string
@@ -165,7 +170,7 @@
 (defun figure-on-pos (pos figures)
   "Возвращает фигуру, стоящую на позиции pos
    или nil, если там нет ни одной фигуры"
-  (find-if (lambda (x) (equal (figure-pos x) pos))
+  (find-if (lambda (x) (pos-equal (figure-pos x) pos))
            figures))
 
 (defun figure-on-pos-p (pos figures)
