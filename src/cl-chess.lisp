@@ -129,6 +129,18 @@
       t
       nil))
 
+(defun neighbors-with-diag (pos)
+  "Вернет список координат соседних с pos клеток.
+   Учитываются и диагональные соседи."
+  (map 'list (lambda (x) (funcall (direction-stepper x) pos))
+       +direction+))
+
+(defun neighbors-without-diag (pos)
+  "Вернет список координат соседних с pos клеток.
+   Диагональные клетки, при этом не учитываются"
+  (map 'list (lambda (x) (funcall (direction-stepper x) pos))
+       (list +N+ +E+ +S+ +W+)))
+
 
 ;;; Функции, определяющие ходы типов фигур
 (defun pawn-turns (pos color)
