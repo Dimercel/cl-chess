@@ -153,7 +153,7 @@
                  (make-pos (1- row-inx) (1+ col-inx))))
           (when (= 6 row-inx)
             (setf result
-                  (cons (make-pos (- row-inx 2) col-inx)) result))))
+                  (cons (make-pos (- row-inx 2) col-inx) result)))))
     (remove-if-not #'on-board result)))
 
 (defun bishop-turns (pos &optional (depth +board-size+))
@@ -201,7 +201,6 @@
   "Вернет доступные пешки ходы из позиции pos,
    учитывая остальные фигуры на доске figures"
   (let ((pawn (figure-on-pos pos figures))
-        (row-inx (pos-row pos))
         (col-inx (pos-col pos)))
     (when (and (not (null pawn))
                (= (figure-type pawn) +pawn+))
