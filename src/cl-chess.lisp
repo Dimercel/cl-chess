@@ -151,6 +151,23 @@
     (= 1 (abs (- (pos-row pos1) (pos-row pos2))))
     (= 1 (abs (- (pos-col pos1) (pos-col pos2)))))))
 
+(defun get-linked (neighbors item coll)
+  "Вернет список связанных между собой элементов.
+   Связанность вычисляется на основе транзитивности
+   предиката neighbors"
+  (if (null coll)
+      '()
+      (let* ((neighbors-items-p (lambda (x) (funcall neighbors item x)))
+             (cur-gen (remove-if-not neighbors-items-p coll))
+             (other (remove-if neighbors-items-p coll))
+             (result cur-gen))
+        (dolist (item cur-gen)
+          (setf result
+                (nconc result (get-linked neighbors
+                                          item
+                                          other))))
+        result)))
+
 
 ;;; Функции, определяющие ходы типов фигур
 (defun pawn-turns (pos color)
