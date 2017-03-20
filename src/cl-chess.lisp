@@ -135,11 +135,21 @@
   (map 'list (lambda (x) (funcall (direction-stepper x) pos))
        +direction+))
 
-(defun neighbors-without-diag (pos)
-  "Вернет список координат соседних с pos клеток.
-   Диагональные клетки, при этом не учитываются"
-  (map 'list (lambda (x) (funcall (direction-stepper x) pos))
-       (list +N+ +E+ +S+ +W+)))
+(defun neighbors-p (pos1 pos2)
+  "Вернет истину если позиции клеток pos1 и pos2
+   являются соседними. Диагонали не учитываются."
+  (= 1 (abs
+        (+
+         (- (pos-row pos1) (pos-row pos2))
+         (- (pos-col pos1) (pos-col pos2))))))
+
+(defun neighbors-diag-p (pos1 pos2)
+  "Учитываются диагональные клетки"
+  (or
+   (neighbors-p pos1 pos2)
+   (and
+    (= 1 (abs (- (pos-row pos1) (pos-row pos2))))
+    (= 1 (abs (- (pos-col pos1) (pos-col pos2)))))))
 
 
 ;;; Функции, определяющие ходы типов фигур
