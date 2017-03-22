@@ -157,7 +157,7 @@
              (reduce #'nconc
                      (map 'list
                           (lambda (x)
-                            (get-linked-t neighbors x other :test test))
+                            (get-linked neighbors x other :test test))
                           cur-gen))
              :test test))))
 
@@ -228,7 +228,6 @@
   (queen-turns pos 1))
 
 
-;; TODO Некорректная работа при стартовой позиции 
 (defun pawn-available-turns (pos figures)
   "Вернет доступные пешки ходы из позиции pos,
    учитывая остальные фигуры на доске figures"
@@ -241,6 +240,13 @@
                         (lambda (x) (= col-inx (pos-col x))) turns))
              (not-attacked (remove-if-not
                             (lambda (x) (= col-inx (pos-col x))) turns)))
-        (nconc
-         (remove-if-not (lambda (x) (figure-on-pos x figures)) attacked)
-         (remove-if (lambda (x) (figure-on-pos x figures)) not-attacked))))))
+                    (nconc
+                     (remove-if-not (lambda (x)
+                                      (figure-on-pos x figures))
+                                    attacked)
+                     (get-linked 'neighbors-diag-p
+                                 pos
+                                 (remove-if (lambda (x)
+                                              (figure-on-pos x figures))
+                                            not-attacked)
+                                 :test 'pos-equal))))))
