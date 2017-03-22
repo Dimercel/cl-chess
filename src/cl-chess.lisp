@@ -129,12 +129,6 @@
       t
       nil))
 
-(defun neighbors-with-diag (pos)
-  "Вернет список координат соседних с pos клеток.
-   Учитываются и диагональные соседи."
-  (map 'list (lambda (x) (funcall (direction-stepper x) pos))
-       +direction+))
-
 (defun neighbors-p (pos1 pos2)
   "Вернет истину если позиции клеток pos1 и pos2
    являются соседними. Диагонали не учитываются."
@@ -151,22 +145,21 @@
     (= 1 (abs (- (pos-row pos1) (pos-row pos2))))
     (= 1 (abs (- (pos-col pos1) (pos-col pos2)))))))
 
-(defun get-linked (neighbors item coll)
+(defun get-linked (neighbors item coll &key (test 'equal))
   "Вернет список связанных между собой элементов.
    Связанность вычисляется на основе транзитивности
    предиката neighbors"
-  (if (null coll)
-      '()
-      (let* ((neighbors-items-p (lambda (x) (funcall neighbors item x)))
-             (cur-gen (remove-if-not neighbors-items-p coll))
-             (other (remove-if neighbors-items-p coll))
-             (result cur-gen))
-        (dolist (item cur-gen)
-          (setf result
-                (nconc result (get-linked neighbors
-                                          item
-                                          other))))
-        result)))
+  (let* ((neighbors-items-p (lambda (x) (funcall neighbors item x)))
+         (cur-gen (remove-if-not neighbors-items-p coll))
+         (other (remove-if neighbors-items-p coll)))
+    (append cur-gen
+            (delete-duplicates
+             (reduce #'nconc
+                     (map 'list
+                          (lambda (x)
+                            (get-linked-t neighbors x other :test test))
+                          cur-gen))
+             :test test))))
 
 
 ;;; Функции, определяющие ходы типов фигур
