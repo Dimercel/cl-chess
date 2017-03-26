@@ -227,9 +227,21 @@
 (defun king-turns (pos)
   (queen-turns pos 1))
 
+(defun get-turns (figure &optional (depth +board-size+))
+  "Вычисляет доступные фигуре ходы, без учета остальных."
+  (let ((pos (figure-pos figure))
+        (type (figure-type figure)))
+    (cond
+      ((= type +pawn+) (pawn-turns pos (figure-color figure)))
+      ((= type +bishop+) (bishop-turns pos depth))
+      ((= type +knight+) (knight-turns pos))
+      ((= type +rook+) (rook-turns pos depth))
+      ((= type +queen+) (queen-turns pos depth))
+      ((= type +king+) (king-turns pos))
+      (t nil))))
 
 (defun pawn-available-turns (pos figures)
-  "Вернет доступные пешки ходы из позиции pos,
+  "Вернет доступные пешке ходы из позиции pos,
    учитывая остальные фигуры на доске figures"
   (let ((pawn (figure-on-pos pos figures))
         (col-inx (pos-col pos)))
