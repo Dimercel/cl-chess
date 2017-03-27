@@ -161,6 +161,15 @@
                           cur-gen))
              :test test))))
 
+(defun invert-color (color)
+  (when (= color +black+)
+    +white+)
+  +black+)
+
+(defun figures-by-color (figures color)
+  "Выбирает все фигуры цвета color из списка figures"
+  (remove-if-not (lambda (x) (= color (figure-color x))) figures))
+
 
 ;;; Функции, определяющие ходы типов фигур
 (defun pawn-turns (pos color)
