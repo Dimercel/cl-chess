@@ -58,6 +58,11 @@
                                     '(0 1 2 3 4 5 6 7))
   "Конвертирует имена столбцов шахматной доски и их индекс")
 
+(defconstant +figure-type-&-intl+ (build-mapping
+                                   +figure-type+
+                                   '(#\p #\B #\N #\R #\Q #\K))
+  "Конвертер между типом фигуры и ее интернациональным обозначением")
+
 
 ;;; Представляет координаты позиции шахматной фигуры
 (defun make-pos (row-inx col-inx)
@@ -101,6 +106,14 @@
       (vector color type pos)
       nil))
 
+(defun make-chess-figure-by-intl (intl-val color)
+  "Создает шахматную фигуру по строке, содержащей
+   интернациональные обозначения"
+  (make-chess-figure color
+                     (mapping-value (char intl-val 0)
+                                    +figure-type-&-intl+)
+                     (make-pos-by-intl (subseq intl-val 1 3))))
+
 (defun figure-color (figure)
   (aref figure 0))
 
@@ -109,6 +122,11 @@
 
 (defun figure-pos (figure)
   (aref figure 2))
+
+(defun intl-figure (figure)
+  (concatenate 'string
+               (list (mapping-value (figure-type figure) +figure-type-&-intl+))
+               (intl-pos (figure-pos figure))))
 
 
 ;;; Вспомогательные функции
