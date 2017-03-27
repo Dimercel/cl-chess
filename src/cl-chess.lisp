@@ -188,6 +188,18 @@
   "Выбирает все фигуры цвета color из списка figures"
   (remove-if-not (lambda (x) (= color (figure-color x))) figures))
 
+(defun starting-board-state ()
+  "Генерирует стартовое состояние шахматной доски"
+  (nconc
+   (map 'list
+        (lambda (x) (make-chess-figure-by-intl x +black+))
+        (list "Ra8" "Nb8" "Bc8" "Qd8" "Ke8" "Bf8" "Ng8" "Rh8"
+              "pa7" "pb7" "pc7" "pd7" "pe7" "pf7" "pg7" "ph7"))
+   (map 'list
+        (lambda (x) (make-chess-figure-by-intl x +white+))
+        (list "pa2" "pb2" "pc2" "pd2" "pe2" "pf2" "pg2" "ph2"
+              "Ra1" "Nb1" "Bc1" "Qd1" "Ke1" "Bf1" "Ng1" "Rh1"))))
+
 
 ;;; Функции, определяющие ходы типов фигур
 (defun pawn-turns (pos color)
