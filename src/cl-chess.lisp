@@ -29,7 +29,7 @@
 (defconstant +NW+ #(-1 -1))
 
 (defconstant +direction+ (list +N+ +NE+ +E+ +SE+
-                              +S+ +SW+ +W+ +NW+))
+                               +S+ +SW+ +W+ +NW+))
 
 
 ;; Цвета фигур
@@ -291,13 +291,26 @@
                         (lambda (x) (= col-inx (pos-col x))) turns))
              (not-attacked (remove-if-not
                             (lambda (x) (= col-inx (pos-col x))) turns)))
-                    (nconc
-                     (remove-if-not (lambda (x)
-                                      (figure-on-pos x figures))
-                                    attacked)
-                     (get-linked 'neighbors-diag-p
-                                 pos
-                                 (remove-if (lambda (x)
-                                              (figure-on-pos x figures))
-                                            not-attacked)
-                                 :test 'pos-equal))))))
+        (nconc
+         (remove-if-not (lambda (x)
+                          (figure-on-pos x figures))
+                        attacked)
+         (get-linked 'neighbors-diag-p
+                     pos
+                     (remove-if (lambda (x)
+                                  (figure-on-pos x figures))
+                                not-attacked)
+                     :test 'pos-equal))))))
+
+
+(defun available-turns (pos figures)
+  "Возвращает список доступных для хода позиций из
+   положения pos с учетом остальных фигур figures"
+  (let ((spec-figure (figure-on-pos pos figures))
+        (all-pos (map 'list 'figure-pos figures)))
+    (get-linked 'neighbors-diag-p
+                pos
+                (remove-if (lambda (x)
+                             (is-member x all-pos :test 'pos-equal))
+                           (get-turns spec-figure))
+                :test 'pos-equal)))
