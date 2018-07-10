@@ -9,6 +9,8 @@
            :figure-pos
            :figure-color
            :figure-type)
+  (:import-from :alexandria
+                :define-constant)
   (:import-from :cl-chess.utils
                 :is-member
                 :build-mapping
@@ -19,49 +21,47 @@
 
 
 ;; Приращения, соответствующие сторонам света
-(defconstant +N+  #(-1 0))
-(defconstant +NE+ #(-1 1))
-(defconstant +E+  #(0 1))
-(defconstant +SE+ #(1 1))
-(defconstant +S+  #(1 0))
-(defconstant +SW+ #(1 -1))
-(defconstant +W+  #(0 -1))
-(defconstant +NW+ #(-1 -1))
+(define-constant +N+  #(-1 0) :test 'equalp)
+(define-constant +NE+ #(-1 1) :test 'equalp)
+(define-constant +E+  #(0 1) :test 'equalp)
+(define-constant +SE+ #(1 1) :test 'equalp)
+(define-constant +S+  #(1 0) :test 'equalp)
+(define-constant +SW+ #(1 -1) :test 'equalp)
+(define-constant +W+  #(0 -1) :test 'equalp)
+(define-constant +NW+ #(-1 -1) :test 'equalp)
 
-(defconstant +direction+ (list +N+ +NE+ +E+ +SE+
-                              +S+ +SW+ +W+ +NW+))
+(define-constant +direction+ (list +N+ +NE+ +E+ +SE+ +S+ +SW+ +W+ +NW+)
+                 :test 'equalp)
 
 
 ;; Цвета фигур
-(defconstant +black+ 0)
-(defconstant +white+ 1)
+(define-constant +black+ 0 :test 'equalp)
+(define-constant +white+ 1 :test 'equalp)
 
-(defconstant +figure-color+ (list +black+ +white+))
+(define-constant +figure-color+ (list +black+ +white+) :test 'equalp)
 
 
 ;; Типы фигур
-(defconstant +pawn+ 0)
-(defconstant +bishop+ 1)
-(defconstant +knight+ 2)
-(defconstant +rook+ 3)
-(defconstant +queen+ 4)
-(defconstant +king+ 5)
+(define-constant +pawn+ 0 :test 'equalp)
+(define-constant +bishop+ 1 :test 'equalp)
+(define-constant +knight+ 2 :test 'equalp)
+(define-constant +rook+ 3 :test 'equalp)
+(define-constant +queen+ 4 :test 'equalp)
+(define-constant +king+ 5 :test 'equalp)
 
-(defconstant +figure-type+ (list +pawn+ +bishop+
-                                 +knight+ +rook+
-                                 +queen+ +king+))
+(define-constant +figure-type+ (list +pawn+ +bishop+ +knight+ +rook+ +queen+ +king+)
+                 :test 'equalp)
 
-(defconstant +board-size+ 8)
+(define-constant +board-size+ 8 :test 'equalp)
 
-(defconstant +chess-col-&-inx-map+ (build-mapping
-                                    '("a" "b" "c" "d" "e" "f" "g" "h")
-                                    '(0 1 2 3 4 5 6 7))
-  "Конвертирует имена столбцов шахматной доски и их индекс")
+(define-constant +chess-col-&-inx-map+ (build-mapping
+                                        '("a" "b" "c" "d" "e" "f" "g" "h")
+                                        '(0 1 2 3 4 5 6 7))
+                 :test 'equalp)
 
-(defconstant +figure-type-&-intl+ (build-mapping
-                                   +figure-type+
-                                   '(#\p #\B #\N #\R #\Q #\K))
-  "Конвертер между типом фигуры и ее интернациональным обозначением")
+(define-constant +figure-type-&-intl+ (build-mapping +figure-type+
+                                                     '(#\p #\B #\N #\R #\Q #\K))
+                 :test 'equalp)
 
 
 ;;; Представляет координаты позиции шахматной фигуры

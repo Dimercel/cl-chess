@@ -16,7 +16,7 @@
   :version "0.1"
   :author "Ito Dimercel"
   :license "MIT"
-  :depends-on ()
+  :depends-on (:alexandria)
   :components ((:module "src"
                 :components
                 ((:file "cl-chess" :depends-on ("utils"))
