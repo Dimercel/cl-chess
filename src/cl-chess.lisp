@@ -291,13 +291,13 @@
                         (lambda (x) (= col-inx (pos-col x))) turns))
              (not-attacked (remove-if-not
                             (lambda (x) (= col-inx (pos-col x))) turns)))
-                    (nconc
-                     (remove-if-not (lambda (x)
-                                      (figure-on-pos x figures))
-                                    attacked)
-                     (get-linked 'neighbors-diag-p
-                                 pos
-                                 (remove-if (lambda (x)
-                                              (figure-on-pos x figures))
-                                            not-attacked)
-                                 :test 'pos-equal))))))
+        (nconc
+         (remove-if-not (lambda (x)
+                          (figure-on-pos x figures))
+                        attacked)
+         (get-linked 'neighbors-diag-p
+                     pos
+                     (remove-if (lambda (x)
+                                  (figure-on-pos x figures))
+                                not-attacked)
+                     :test 'pos-equal))))))
