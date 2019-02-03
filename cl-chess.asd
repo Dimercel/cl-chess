@@ -16,10 +16,11 @@
   :version "0.1"
   :author "Ito Dimercel"
   :license "MIT"
-  :depends-on (:alexandria)
+  :depends-on (:alexandria :smug)
   :components ((:module "src"
                 :components
                 ((:file "cl-chess" :depends-on ("utils"))
+                 (:file "notation" :depends-on ("utils" "cl-chess"))
                  (:file "utils"))))
   :description ""
   :long-description
