@@ -50,3 +50,20 @@
   (:export))
 
 (in-package :cl-chess.notation.fen)
+
+(defun .figure ()
+  (.let* ((figure (.one-of "kqrbnpKQRBNP")))
+    (.identity
+     (case figure
+       (#\k (token :black-king figure))
+       (#\q (token :black-queen figure))
+       (#\r (token :black-rook figure))
+       (#\b (token :black-bishop figure))
+       (#\n (token :black-knight figure))
+       (#\p (token :black-pawn figure))
+       (#\K (token :white-king figure))
+       (#\Q (token :white-queen figure))
+       (#\R (token :white-rook figure))
+       (#\B (token :white-bishop figure))
+       (#\N (token :white-knight figure))
+       (#\P (token :white-pawn figure))))))
