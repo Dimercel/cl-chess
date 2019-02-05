@@ -105,3 +105,10 @@
 (defun .fullmove ()
   (with-token :fullmove 'parse-integer
     (.many1 (.is 'digit-char-p))))
+
+(defun .row ()
+  (.prog1
+   (.many1 (.or (.figure)
+                (.space))
+           'list)
+   (.separator)))
