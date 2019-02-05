@@ -79,3 +79,29 @@
 (defun .space ()
   (with-token :space 'char2digit
     (.one-of "12345678")))
+
+(defun .separator ()
+  (with-token :separator nil
+    (.char= #\/)))
+
+(defun .side-move ()
+  (with-token :side nil
+    (.one-of "bw")))
+
+(defun .castle ()
+  (with-token :castle nil
+    (.or (.string= "-")
+         (.many1 (.one-of "kqKQ-")))))
+
+(defun .two-square ()
+  (with-token :two-square nil
+    (.or (.string= "-")
+         (.many1 (.one-of "abcdefgh12345678")))))
+
+(defun .halfmove ()
+  (with-token :halfmove 'parse-integer
+    (.many1 (.is 'digit-char-p))))
+
+(defun .fullmove ()
+  (with-token :fullmove 'parse-integer
+    (.many1 (.is 'digit-char-p))))
