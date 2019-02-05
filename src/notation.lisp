@@ -7,7 +7,8 @@
 
 (defpackage cl-chess.notation.utils
   (:use :cl :smug)
-  (:export :.one-of
+  (:export :char2digit
+           :.one-of
            :.none-of
            :.many
            :.many1
@@ -18,6 +19,9 @@
 
 (in-package :cl-chess.notation.utils)
 
+
+(defun char2digit (char)
+  (- (char-code char) 48))
 
 (defun .one-of (string)
   (.is (lambda (x) (find x string))))
@@ -40,10 +44,14 @@
 (defun token-val (token)
   (elt token 1))
 
-(defmacro with-token (token-id &body forms)
-  `(.bind
-    (progn ,@forms)
-    (lambda (x) (.identity (token ,token-id x)))))
+(defmacro with-token (token-id action &body forms)
+  (if (null action)
+      `(.bind
+        (progn ,@forms)
+        (lambda (x) (.identity (token ,token-id x))))
+      `(.bind
+        (progn ,@forms)
+        (lambda (x) (.identity (token ,token-id (funcall ,action x)))))))
 
 (defpackage cl-chess.notation.fen
   (:use :cl :smug :trivia :cl-chess.notation.utils)
@@ -67,3 +75,7 @@
        (#\B (token :white-bishop figure))
        (#\N (token :white-knight figure))
        (#\P (token :white-pawn figure))))))
+
+(defun .space ()
+  (with-token :space 'char2digit
+    (.one-of "12345678")))
