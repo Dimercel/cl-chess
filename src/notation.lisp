@@ -12,6 +12,7 @@
            :.none-of
            :.many
            :.many1
+           :.count
            :token
            :token-id
            :token-val
@@ -34,6 +35,15 @@
 
 (defun .many (parser &optional (result-type 'string))
   (.first (.map result-type parser :at-least 0)))
+
+(defmacro .count (result-type count parser)
+  (if (not (= count 0))
+      (let ((name (gensym))
+            (other (gensym)))
+        `(.let* ((,name ,parser)
+                 (,other (.count ,result-type ,(1- count) ,parser)))
+           (.identity (concatenate ,result-type ,name ,other))))
+      `(.identity nil)))
 
 (defun token (id val)
   (vector id val))
@@ -107,8 +117,9 @@
     (.many1 (.is 'digit-char-p))))
 
 (defun .row ()
-  (.prog1
-   (.many1 (.or (.figure)
-                (.space))
-           'list)
-   (.separator)))
+  (with-token :row nil
+    (.prog1
+     (.many1 (.or (.figure)
+                  (.space))
+             'list)
+     (.separator))))
