@@ -69,6 +69,9 @@
 
 (in-package :cl-chess.notation.fen)
 
+(defun .ws ()
+  (.string= " "))
+
 (defun .figure ()
   (.let* ((figure (.one-of "kqrbnpKQRBNP")))
     (.identity
@@ -122,4 +125,18 @@
      (.many1 (.or (.figure)
                   (.space))
              'list)
-     (.separator))))
+     (.plus (.separator)
+            (.ws)))))
+
+(defun .fen ()
+  (.let* ((state (.count 'list 8 (.row)))
+          (side (.side-move))
+          (_ (.ws))
+          (castle (.castle))
+          (_ (.ws))
+          (two-square (.two-square))
+          (_ (.ws))
+          (halfmove (.halfmove))
+          (_ (.ws))
+          (fullmove (.fullmove)))
+    (.identity (list state side castle two-square halfmove fullmove))))
