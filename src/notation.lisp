@@ -45,23 +45,15 @@
            (.identity (concatenate ,result-type ,name ,other))))
       `(.identity nil)))
 
-(defun token (id val)
-  (vector id val))
-
-(defun token-id (token)
-  (elt token 0))
-
-(defun token-val (token)
-  (elt token 1))
+(defstruct token
+  id
+  val)
 
 (defmacro with-token (token-id action &body forms)
-  (if (null action)
-      `(.bind
-        (progn ,@forms)
-        (lambda (x) (.identity (token ,token-id x))))
-      `(.bind
-        (progn ,@forms)
-        (lambda (x) (.identity (token ,token-id (funcall ,action x)))))))
+  (let ((fn (if (null action) 'identity action)))
+    `(.bind
+      (progn ,@forms)
+      (lambda (x) (.identity (make-token :id ,token-id :val (funcall ,fn x)))))))
 
 (defpackage cl-chess.notation.fen
   (:use :cl :smug :trivia :cl-chess.notation.utils)
@@ -76,18 +68,18 @@
   (.let* ((figure (.one-of "kqrbnpKQRBNP")))
     (.identity
      (case figure
-       (#\k (token :black-king figure))
-       (#\q (token :black-queen figure))
-       (#\r (token :black-rook figure))
-       (#\b (token :black-bishop figure))
-       (#\n (token :black-knight figure))
-       (#\p (token :black-pawn figure))
-       (#\K (token :white-king figure))
-       (#\Q (token :white-queen figure))
-       (#\R (token :white-rook figure))
-       (#\B (token :white-bishop figure))
-       (#\N (token :white-knight figure))
-       (#\P (token :white-pawn figure))))))
+       (#\k (make-token :id :black-king   :val figure))
+       (#\q (make-token :id :black-queen  :val figure))
+       (#\r (make-token :id :black-rook   :val figure))
+       (#\b (make-token :id :black-bishop :val figure))
+       (#\n (make-token :id :black-knight :val figure))
+       (#\p (make-token :id :black-pawn   :val figure))
+       (#\K (make-token :id :white-king   :val figure))
+       (#\Q (make-token :id :white-queen  :val figure))
+       (#\R (make-token :id :white-rook   :val figure))
+       (#\B (make-token :id :white-bishop :val figure))
+       (#\N (make-token :id :white-knight :val figure))
+       (#\P (make-token :id :white-pawn   :val figure))))))
 
 (defun .space ()
   (with-token :space 'char2digit
