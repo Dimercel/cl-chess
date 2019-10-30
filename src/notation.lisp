@@ -96,7 +96,7 @@
 (defun .castle ()
   (with-token :castle nil
     (.or (.string= "-")
-         (.many1 (.one-of "kqKQ-")))))
+         (.many1 (.one-of "kqKQ")))))
 
 (defun .two-square ()
   (with-token :two-square nil
