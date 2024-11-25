@@ -1,38 +1,32 @@
-#|
-  This file is a part of cl-chess project.
-  Copyright (c) 2017 Ito Dimercel (xolcman@gmail.com)
-|#
-
-#|
-  Author: Ito Dimercel (xolcman@gmail.com)
-|#
-
-(in-package :cl-user)
-(defpackage cl-chess-asd
-  (:use :cl :asdf))
-(in-package :cl-chess-asd)
-
-(defsystem cl-chess
+(defsystem "cl-chess"
+  :long-name "Chess library"
   :version "0.1"
   :author "Ito Dimercel"
+  :maintainer "Ito Dimercel"
+  :mailto "xolcman@gmail.com"
   :license "MIT"
-  :depends-on (:alexandria :smug :trivia)
+  :homepage "https://github.com/Dimercel/cl-chess"
+  :bug-tracker "https://github.com/Dimercel/cl-chess/issues"
+  :source-control "https://github.com/Dimercel/cl-chess.git"
+  :depends-on ("alexandria"
+               "smug"
+               "trivia")
   :components ((:module "src"
                 :components
                 ((:file "cl-chess" :depends-on ("utils"))
                  (:file "notation" :depends-on ("utils" "cl-chess"))
                  (:file "utils"))))
-  :description ""
-  :long-description
-  #.(with-open-file (stream (merge-pathnames
-                             #p"README.markdown"
-                             (or *load-pathname* *compile-file-pathname*))
-                            :if-does-not-exist nil
-                            :direction :input)
-      (when stream
-        (let ((seq (make-array (file-length stream)
-                               :element-type 'character
-                               :fill-pointer t)))
-          (setf (fill-pointer seq) (read-sequence seq stream))
-          seq)))
-  :in-order-to ((test-op (test-op cl-chess-test))))
+  :description "Chesslibrary"
+  :long-description "Chess library"
+  :in-order-to ((test-op (test-op "cl-chess/tests"))))
+
+(defsystem "cl-chess/tests"
+  :author "Ito Dimercel"
+  :license "MIT"
+  :depends-on ("cl-chess"
+               "rove")
+  :components ((:module "tests"
+                :components
+                ((:file "main"))))
+  :description "Test system for cl-chess"
+  :perform (test-op (op c) (symbol-call :rove :run c)))

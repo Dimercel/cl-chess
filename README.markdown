@@ -10,7 +10,7 @@
 
 ## Copyright
 
-Copyright (c) 2017 Ito Dimercel (xolcman@gmail.com)
+Copyright (c) 2024 Ito Dimercel (xolcman@gmail.com)
 
 ## License
 
